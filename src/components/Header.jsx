@@ -1,4 +1,4 @@
-import headerImage from '../assets/Header.jpg'; // o .png si tu imagen tiene esa extensión
+import headerImage from '../assets/Header.jpg'; // 
 
 const Header = () => {
   const styles = {
