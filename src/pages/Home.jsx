@@ -1,27 +1,25 @@
-import Header from '../components/Header';
-import CardPizza from '../components/CardPizza';
-import { pizzas } from '../data/pizzasData';
+import { useContext } from "react";
+import { PizzaContext } from "../context/PizzaContext";
+import CardPizza from "../components/CardPizza";
 
 const Home = () => {
-  return (
-    <>
-      <Header />
+  const { pizzas } = useContext(PizzaContext);
 
-      <main className="container my-5">
-        <div className="row g-4">
-          {pizzas.map((pizza, index) => (
-            <div key={index} className="col-12 col-md-4">
-              <CardPizza
-                name={pizza.name}
-                price={pizza.price}
-                ingredients={pizza.ingredients}
-                img={pizza.img}
-              />
-            </div>
-          ))}
-        </div>
-      </main>
-    </>
+  // 💡 Asegura que pizzas sea un array antes de usar .map()
+  if (!Array.isArray(pizzas)) {
+    return <div className="text-center mt-5">Cargando pizzas...</div>;
+  }
+
+  return (
+    <div className="container my-4">
+      <div className="row g-4">
+        {pizzas.map((pizza) => (
+          <div className="col-md-4" key={pizza.id}>
+            <CardPizza pizza={pizza} />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 

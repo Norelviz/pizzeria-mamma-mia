@@ -1,25 +1,31 @@
-import { formatPrice } from '../utils/format';
+import { useContext } from "react";
+import { PizzaContext } from "../context/PizzaContext";
 
-const CardPizza = ({ name, price, ingredients, img }) => {
+const CardPizza = ({ pizza }) => {
+  const { addToCart } = useContext(PizzaContext);
+
   return (
-    <div className="card h-100 shadow-sm">
-      <img src={img} className="card-img-top" alt={name} />
-      <div className="card-body d-flex flex-column">
-        <h5 className="card-title">{name}</h5>
-
-        <p className="mb-1 text-muted">Ingredientes:</p>
-        <ul className="ps-3" style={{ fontSize: '0.95rem' }}>
-          {ingredients.map((ing, i) => (
-            <li key={i}>{ing}</li>
+    <div className="card shadow-sm text-center" style={{ width: "20rem" }}>
+      <img
+        src={pizza.img}
+        alt={pizza.name}
+        className="card-img-top"
+        style={{ height: "220px", objectFit: "cover" }}
+      />
+      <div className="card-body">
+        <h5 className="card-title fw-bold">{pizza.name}</h5>
+        <p className="text-muted mb-1">Ingredientes:</p>
+        <ul className="list-unstyled mb-3">
+          {pizza.ingredients.map((ing, i) => (
+            <li key={i}>🍕 {ing}</li>
           ))}
         </ul>
-
-        <div className="mt-auto d-flex justify-content-between align-items-center">
-          <span className="fw-bold fs-5">${formatPrice(price)}</span>
-          <div className="d-flex gap-2">
-            <button className="btn btn-outline-primary">Ver más</button>
-            <button className="btn btn-primary">Añadir</button>
-          </div>
+        <h5 className="fw-bold mb-3">${pizza.price.toLocaleString("es-CL")}</h5>
+        <div className="d-flex justify-content-center gap-2">
+          <button className="btn btn-outline-primary btn-sm">Ver más</button>
+          <button className="btn btn-primary btn-sm" onClick={() => addToCart(pizza)}>
+            Añadir
+          </button>
         </div>
       </div>
     </div>
