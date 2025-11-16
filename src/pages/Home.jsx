@@ -1,22 +1,30 @@
-import { useContext } from "react";
-import { PizzaContext } from "../context/PizzaContext";
+import { useEffect, useState } from "react";
 import CardPizza from "../components/CardPizza";
 
 const Home = () => {
-  const { pizzas } = useContext(PizzaContext);
+  const [pizzas, setPizzas] = useState([]);
 
-  // 💡 Asegura que pizzas sea un array antes de usar .map()
-  if (!Array.isArray(pizzas)) {
-    return <div className="text-center mt-5">Cargando pizzas...</div>;
-  }
+  useEffect(() => {
+    const loadPizzas = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/pizzas");
+        const data = await res.json();
+        setPizzas(data);
+      } catch (error) {
+        console.error("Error cargando pizzas", error);
+      }
+    };
+
+    loadPizzas();
+  }, []);
 
   return (
-    <div className="container my-4">
-      <div className="row g-4">
-        {pizzas.map((pizza) => (
-          <div className="col-md-4" key={pizza.id}>
-            <CardPizza pizza={pizza} />
-          </div>
+    <div className="home">
+      <h2>Nuestras pizzas</h2>
+
+      <div className="pizzas-container">
+        {pizzas.map((p) => (
+          <CardPizza key={p.id} pizza={p} />
         ))}
       </div>
     </div>
