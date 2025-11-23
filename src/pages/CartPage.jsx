@@ -4,7 +4,7 @@ import { PizzaContext } from "../context/PizzaContext";
 const CartPage = () => {
   const { cart, setCart } = useContext(PizzaContext);
 
-  // 🔹 Aumentar cantidad
+
   const increase = (id) => {
     const updatedCart = cart.map((pizza) =>
       pizza.id === id ? { ...pizza, count: pizza.count + 1 } : pizza
@@ -12,7 +12,7 @@ const CartPage = () => {
     setCart(updatedCart);
   };
 
-  // 🔹 Disminuir cantidad
+ 
   const decrease = (id) => {
     const updatedCart = cart
       .map((pizza) =>
@@ -22,7 +22,7 @@ const CartPage = () => {
     setCart(updatedCart);
   };
 
-  // 🔹 Calcular total
+
   const total = cart.reduce(
     (sum, pizza) => sum + pizza.price * pizza.count,
     0

@@ -1,4 +1,3 @@
-// src/context/PizzaContext.jsx
 import { createContext, useState } from "react";
 import { pizzas } from "../data/pizzas";
 

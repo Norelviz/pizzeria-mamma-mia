@@ -13,7 +13,7 @@ const LoginPage = () => {
     } else if (password.length < 6) {
       setMessage("⚠️ La contraseña debe tener al menos 6 caracteres");
     } else {
-      setMessage("✅ Login exitoso");
+      setMessage("✅ Inicio de sesión exitoso (simulado)");
       setEmail("");
       setPassword("");
     }
@@ -22,6 +22,7 @@ const LoginPage = () => {
   return (
     <div className="container my-5" style={{ maxWidth: "500px" }}>
       <h2 className="text-center mb-4">Iniciar Sesión</h2>
+
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Email:</label>
@@ -43,8 +44,8 @@ const LoginPage = () => {
           />
         </div>
 
-        <button type="submit" className="btn btn-success w-100">
-          Ingresar
+        <button type="submit" className="btn btn-primary w-100">
+          Entrar
         </button>
       </form>
 
