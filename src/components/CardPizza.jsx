@@ -1,10 +1,6 @@
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { PizzaContext } from "../context/PizzaContext";
 
-const CardPizza = ({ pizza }) => {
-  const { addToCart } = useContext(PizzaContext);
-
+const CardPizza = ({ pizza, addToCart }) => {
   return (
     <div className="card mb-4 shadow-sm" style={{ width: "22rem" }}>
       <img
@@ -24,10 +20,11 @@ const CardPizza = ({ pizza }) => {
           ))}
         </ul>
 
-        <h4 className="text-center mt-3">${pizza.price.toLocaleString("es-CL")}</h4>
+        <h4 className="text-center mt-3">
+          ${pizza.price.toLocaleString("es-CL")}
+        </h4>
 
         <div className="d-flex justify-content-between mt-3">
-          
           <Link to={`/pizza/${pizza.id}`} className="btn btn-outline-primary">
             Ver más
           </Link>

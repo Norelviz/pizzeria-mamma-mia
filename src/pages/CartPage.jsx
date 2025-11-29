@@ -1,98 +1,96 @@
-import { useContext } from "react";
-import { PizzaContext } from "../context/PizzaContext";
+import { useCart } from "../context/CartContext";
 
 const CartPage = () => {
-  const { cart, setCart } = useContext(PizzaContext);
-
-
-  const increase = (id) => {
-    const updatedCart = cart.map((pizza) =>
-      pizza.id === id ? { ...pizza, count: pizza.count + 1 } : pizza
-    );
-    setCart(updatedCart);
-  };
-
- 
-  const decrease = (id) => {
-    const updatedCart = cart
-      .map((pizza) =>
-        pizza.id === id ? { ...pizza, count: pizza.count - 1 } : pizza
-      )
-      .filter((pizza) => pizza.count > 0); // elimina pizzas con cantidad 0
-    setCart(updatedCart);
-  };
-
-
-  const total = cart.reduce(
-    (sum, pizza) => sum + pizza.price * pizza.count,
-    0
-  );
+  const { cart, addToCart, removeFromCart, total } = useCart();
 
   return (
-    <div className="container py-4">
-      <h2 className="mb-4">🛒 Carrito de compras</h2>
+    <div className="container mt-4">
+      <h2 className="mb-4">🛒 Tu Carrito</h2>
 
-      <div className="card p-4 shadow-sm">
-        {cart.length === 0 ? (
-          <p className="text-center text-muted">Tu carrito está vacío 🍕</p>
-        ) : (
-          cart.map((pizza) => (
+      {cart.length === 0 ? (
+        <div className="alert alert-info text-center">
+          Tu carrito está vacío. ¡Añade alguna pizza! 🍕
+        </div>
+      ) : (
+        <>
+          {cart.map((item) => (
             <div
-              key={pizza.id}
-              className="d-flex align-items-center justify-content-between border-bottom py-3"
+              key={item.id}
+              className="card mb-3 shadow-sm p-3"
+              style={{ maxWidth: "650px", margin: "0 auto" }}
             >
-              <div className="d-flex align-items-center">
-                <img
-                  src={pizza.img}
-                  alt={pizza.name}
-                  width="80"
-                  height="80"
-                  className="rounded me-3"
-                />
-                <div>
-                  <h5 className="mb-1">{pizza.name}</h5>
-                  <p className="text-muted mb-0">
-                    Precio unitario: $
-                    {Number(pizza.price).toLocaleString("es-CL")}
-                  </p>
+              <div className="row g-0 align-items-center">
+
+                {/* Imagen */}
+                <div className="col-md-4">
+                  <img
+                    src={item.img}
+                    alt={item.name}
+                    className="img-fluid rounded"
+                    style={{ height: "140px", objectFit: "cover", width: "100%" }}
+                  />
+                </div>
+
+                {/* Info */}
+                <div className="col-md-8">
+                  <div className="card-body">
+
+                    <h5 className="card-title">{item.name}</h5>
+
+                    <p className="card-text mb-2">
+                      Precio unitario:{" "}
+                      <strong>${item.price.toLocaleString("es-CL")}</strong>
+                    </p>
+
+                    {/* Botones + - */}
+                    <div className="d-flex align-items-center gap-3">
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={() => removeFromCart(item.id)}
+                      >
+                        −
+                      </button>
+
+                      <span className="fw-bold">{item.count}</span>
+
+                      <button
+                        className="btn btn-outline-success btn-sm"
+                        onClick={() => addToCart(item)}
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    {/* Subtotal */}
+                    <p className="card-text mt-3">
+                      Subtotal:{" "}
+                      <strong>
+                        ${(item.price * item.count).toLocaleString("es-CL")}
+                      </strong>
+                    </p>
+
+                  </div>
                 </div>
               </div>
-
-              <div className="d-flex align-items-center gap-2">
-                <button
-                  className="btn btn-outline-danger btn-sm"
-                  onClick={() => decrease(pizza.id)}
-                >
-                  -
-                </button>
-                <span className="fw-bold">{pizza.count}</span>
-                <button
-                  className="btn btn-outline-success btn-sm"
-                  onClick={() => increase(pizza.id)}
-                >
-                  +
-                </button>
-                <h5 className="mb-0 ms-3">
-                  $
-                  {(pizza.price * pizza.count).toLocaleString("es-CL")}
-                </h5>
-              </div>
             </div>
-          ))
-        )}
+          ))}
 
-        <div className="d-flex justify-content-end mt-4">
-          <h4>
-            Total a pagar: ${total.toLocaleString("es-CL")}
-          </h4>
-        </div>
+          {/* TOTAL FINAL */}
+          <div
+            className="card shadow-sm p-4 text-center mt-4"
+            style={{ maxWidth: "650px", margin: "0 auto" }}
+          >
+            <h3 className="mb-3">
+              Total a pagar:{" "}
+              <strong>${total.toLocaleString("es-CL")}</strong>
+            </h3>
 
-        {cart.length > 0 && (
-          <div className="text-end mt-3">
-            <button className="btn btn-success">Pagar</button>
+            <button className="btn btn-success btn-lg w-100">
+              Ir a pagar 💳
+            </button>
           </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 };

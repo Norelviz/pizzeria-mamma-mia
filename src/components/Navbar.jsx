@@ -1,9 +1,8 @@
-import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { PizzaContext } from "../context/PizzaContext";
+import { useCart } from "../context/CartContext";
 
 const Navbar = () => {
-  const { total } = useContext(PizzaContext);
+  const { total } = useCart();
 
   return (
     <nav className="navbar navbar-expand bg-dark navbar-dark sticky-top">
@@ -34,9 +33,10 @@ const Navbar = () => {
 
           {/* Carrito */}
           <Link to="/cart" className="btn btn-success btn-sm ms-2">
-            🛒 Total: ${Number(total || 0).toLocaleString("es-CL")}
+            🛒 Total: ${total.toLocaleString("es-CL")}
           </Link>
         </div>
+
       </div>
     </nav>
   );
