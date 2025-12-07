@@ -1,42 +1,58 @@
 import { Link } from "react-router-dom";
-import { useCart } from "../context/CartContext";
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
+import { UserContext } from "../context/UserContext";
+import { formatPrice } from "../utils/format";
 
 const Navbar = () => {
-  const { total } = useCart();
+  const { total } = useContext(CartContext);
+  const { token, logout } = useContext(UserContext);
 
   return (
-    <nav className="navbar navbar-expand bg-dark navbar-dark sticky-top">
-      <div className="container d-flex justify-content-between align-items-center">
-
-        {/* Branding */}
-        <Link to="/" className="navbar-brand">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+      <div className="container">
+        <Link className="navbar-brand" to="/">
           🍕 Pizzería Mamma Mía
         </Link>
 
-        {/* Navegación */}
-        <div className="d-flex gap-2">
+        <div className="d-flex gap-2 ms-auto">
+        
           <Link to="/" className="btn btn-outline-light btn-sm">
-            🍕 Home
+            🏠 Home
           </Link>
 
-          <Link to="/login" className="btn btn-outline-light btn-sm">
-            🔐 Login
-          </Link>
+          
+          {token ? (
+            <>
+              <Link to="/profile" className="btn btn-outline-light btn-sm">
+                👤 Profile
+              </Link>
 
-          <Link to="/register" className="btn btn-outline-light btn-sm">
-            🧾 Register
-          </Link>
+              <button
+                type="button"
+                className="btn btn-warning btn-sm"
+                onClick={logout}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            
+            <>
+              <Link to="/login" className="btn btn-outline-light btn-sm">
+                🔐 Login
+              </Link>
+              <Link to="/register" className="btn btn-outline-light btn-sm">
+                🧾 Register
+              </Link>
+            </>
+          )}
 
-          <Link to="/profile" className="btn btn-outline-light btn-sm">
-            👤 Profile
-          </Link>
-
-          {/* Carrito */}
-          <Link to="/cart" className="btn btn-success btn-sm ms-2">
-            🛒 Total: ${total.toLocaleString("es-CL")}
+          
+          <Link to="/cart" className="btn btn-success btn-sm">
+            Total: {formatPrice(total || 0)}
           </Link>
         </div>
-
       </div>
     </nav>
   );

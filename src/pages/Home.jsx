@@ -1,11 +1,14 @@
 import { useContext } from "react";
 import CardPizza from "../components/CardPizza";
 import { PizzaContext } from "../context/PizzaContext";
-import { useCart } from "../context/CartContext";
+import { CartContext } from "../context/CartContext";
 
 const Home = () => {
+  
   const { pizzas } = useContext(PizzaContext);
-  const { addToCart } = useCart();
+
+  
+  const { addToCart } = useContext(CartContext);
 
   return (
     <div className="home container mt-4">

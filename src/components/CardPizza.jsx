@@ -1,36 +1,38 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { CartContext } from "../context/CartContext";
+import { formatPrice } from "../utils/format";
 
-const CardPizza = ({ pizza, addToCart }) => {
+const CardPizza = ({ pizza }) => {
+  const { addToCart } = useContext(CartContext);
+
   return (
-    <div className="card mb-4 shadow-sm" style={{ width: "22rem" }}>
-      <img
-        src={pizza.img}
-        alt={pizza.name}
-        className="card-img-top"
-        style={{ height: "260px", objectFit: "cover" }}
-      />
-
-      <div className="card-body">
+    <div className="card h-100 shadow-sm">
+      <img src={pizza.img} alt={pizza.name} className="card-img-top" />
+      <div className="card-body d-flex flex-column">
         <h5 className="card-title text-center">{pizza.name}</h5>
 
-        <p className="text-start"><strong>Ingredientes:</strong></p>
-        <ul className="text-start">
-          {pizza.ingredients.map((ing, i) => (
-            <li key={i}>🍕 {ing}</li>
+        <p className="fw-semibold">Ingredientes:</p>
+        <ul className="list-unstyled flex-grow-1">
+          {pizza.ingredients.map((ing) => (
+            <li key={ing}>🍕 {ing}</li>
           ))}
         </ul>
 
-        <h4 className="text-center mt-3">
-          ${pizza.price.toLocaleString("es-CL")}
+        <h4 className="text-center mt-3 mb-3">
+          {formatPrice(pizza.price)}
         </h4>
 
-        <div className="d-flex justify-content-between mt-3">
-          <Link to={`/pizza/${pizza.id}`} className="btn btn-outline-primary">
+        <div className="d-flex justify-content-between">
+          <Link
+            to={`/pizza/${pizza.id}`}
+            className="btn btn-outline-primary btn-sm"
+          >
             Ver más
           </Link>
 
           <button
-            className="btn btn-primary"
+            className="btn btn-primary btn-sm"
             onClick={() => addToCart(pizza)}
           >
             Añadir
