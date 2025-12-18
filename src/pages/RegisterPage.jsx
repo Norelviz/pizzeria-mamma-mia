@@ -1,31 +1,47 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
+  const { register } = useContext(UserContext);
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password || !confirmPassword) {
       setMessage("❌ Todos los campos son obligatorios");
-    } else if (password.length < 6) {
+      return;
+    }
+
+    if (password.length < 6) {
       setMessage("⚠️ La contraseña debe tener al menos 6 caracteres");
-    } else if (password !== confirmPassword) {
+      return;
+    }
+
+    if (password !== confirmPassword) {
       setMessage("❌ Las contraseñas no coinciden");
-    } else {
+      return;
+    }
+
+    try {
+      await register(email, password);
       setMessage("✅ Registro exitoso");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
+      navigate("/profile");
+    } catch (error) {
+      setMessage("❌ Error al registrarse");
     }
   };
 
   return (
     <div className="container my-5" style={{ maxWidth: "500px" }}>
       <h2 className="text-center mb-4">Registro</h2>
+
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Email:</label>

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import { UserContext } from "../context/UserContext";
 import { formatPrice } from "../utils/format";
@@ -6,6 +6,34 @@ import { formatPrice } from "../utils/format";
 const CartPage = () => {
   const { cart, increment, decrement, total } = useContext(CartContext);
   const { token } = useContext(UserContext);
+
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handlePay = async () => {
+    try {
+      setLoading(true);
+      setSuccess(false);
+
+      const res = await fetch("http://localhost:5000/api/checkouts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ cart }),
+      });
+
+      if (!res.ok) throw new Error("Checkout failed");
+
+      setSuccess(true);
+    } catch (error) {
+      setSuccess(false);
+      alert("❌ No se pudo completar la compra");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (cart.length === 0) {
     return (
@@ -18,7 +46,7 @@ const CartPage = () => {
     );
   }
 
-  const isPayDisabled = cart.length === 0 || !token;
+  const isPayDisabled = cart.length === 0 || !token || loading;
 
   return (
     <div className="container my-5">
@@ -49,16 +77,21 @@ const CartPage = () => {
               <button
                 className="btn btn-outline-danger btn-sm"
                 onClick={() => decrement(item.id)}
+                disabled={loading}
               >
                 -
               </button>
+
               <span>{item.count}</span>
+
               <button
                 className="btn btn-outline-success btn-sm"
                 onClick={() => increment(item.id)}
+                disabled={loading}
               >
                 +
               </button>
+
               <span className="fw-semibold ms-3">
                 {formatPrice(item.price * item.count)}
               </span>
@@ -69,8 +102,13 @@ const CartPage = () => {
 
       <div className="d-flex justify-content-between align-items-center">
         <h4>Total a pagar: {formatPrice(total)}</h4>
-        <button className="btn btn-primary" disabled={isPayDisabled}>
-          Pagar
+
+        <button
+          className="btn btn-primary"
+          disabled={isPayDisabled}
+          onClick={handlePay}
+        >
+          {loading ? "Procesando..." : "Pagar"}
         </button>
       </div>
 
@@ -78,6 +116,12 @@ const CartPage = () => {
         <p className="text-danger mt-2">
           Debes iniciar sesión para poder pagar 🔐
         </p>
+      )}
+
+      {success && (
+        <div className="alert alert-success mt-4 text-center">
+          ✅ Compra realizada con éxito
+        </div>
       )}
     </div>
   );

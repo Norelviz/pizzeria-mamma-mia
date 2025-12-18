@@ -1,21 +1,34 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+  const { login } = useContext(UserContext);
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
       setMessage("❌ Todos los campos son obligatorios");
-    } else if (password.length < 6) {
+      return;
+    }
+
+    if (password.length < 6) {
       setMessage("⚠️ La contraseña debe tener al menos 6 caracteres");
-    } else {
-      setMessage("✅ Inicio de sesión exitoso (simulado)");
-      setEmail("");
-      setPassword("");
+      return;
+    }
+
+    try {
+      await login(email, password);
+      setMessage("✅ Inicio de sesión exitoso");
+      navigate("/profile");
+    } catch (error) {
+      setMessage("❌ Error al iniciar sesión");
     }
   };
 
